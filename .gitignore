@@ -1,0 +1,5 @@
+#what will not be sent to github
+venv
+.idea
+*.iml
+*.pyc
