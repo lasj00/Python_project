@@ -7,7 +7,6 @@ for file in os.listdir(directory):
 
     if os.path.splitext(file)[-1].lower() == ".csv":
         with open(directory+file,'r') as csvinput:
-
             with open(directory+"/Outputs/"+"Change_of_"+file, 'w') as csvoutput:
                 writer = csv.writer(csvoutput, lineterminator='\n')
                 reader = csv.reader(csvinput)
