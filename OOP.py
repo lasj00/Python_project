@@ -1,4 +1,7 @@
-class Rectangle():
+import math
+
+
+class Rectangle:
 
     # the init method is not mandatory
     def __init__(self, a, b):
@@ -58,3 +61,41 @@ r2 = Rectangle3(6, 8)
 r = r1 + r2
 print(r)
 print(r2 < r1)
+
+
+# inheritance
+
+class Shape:
+    def __init__(self, a=0, b=0):
+        self._a = a
+        self._b = b
+
+    def get_a(self):
+        return self._a
+
+    def get_b(self):
+        return self._b
+
+    def __str__(self):
+        return "{0}: [{1},{2}]".format(self.__class__.__name__, self._a, self._b)
+
+
+class RectangleIn(Shape):
+    def calc_surface(self):
+        return self._a * self._b
+
+
+class Circle(Shape):
+    def calc_surface(self):
+        return math.pi * self._a ** 2
+
+    # example of polymorphism
+    def __str__(self):
+        return "{0}: [{1}]".format(self.__class__.__name__, self._a)
+
+
+s = Shape(4, 5)
+r = RectangleIn(4, 5)
+print(r.calc_surface())
+c = Circle(5)
+print(c.calc_surface())
