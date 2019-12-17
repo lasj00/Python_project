@@ -10,36 +10,49 @@ class Customer:
         self.email = email
 
     def __str__(self):
-        return "Customer: {0} {1} {2}".format(self.customer_id,self.first_name,self.last_name)
+        return "Customer: {0} {1} {2}".format(self.customer_id, self.first_name, self.last_name)
 
 # defining our own exception
 class BankException(Exception):
     pass
 
+class History:
+    def __init__(self):
+        self.history = []
+
+    def add_to_history(self, operation, amount, balance):
+        self.history.append(str(datetime.now()) + str(operation) + str(amount) + " Balance after transaction: " + str(balance))
+
+    def __str__(self):
+        full_history = ""
+        for transaction in self.history:
+            full_history += str(transaction) + "\n"
+        return full_history
+
 class Account:
     last_id = 0
     interest_rate = 0.02
-    history = []
 
     def __init__(self, customer):
         Account.last_id += 1
         self.account_id = Account.last_id
         self.customer = customer
         self._balance = 0
+        self._history = History()
 
     def deposit(self, amount):
         if amount < 0:
             print("Not a valid amount!")
         else:
             self._balance += amount
-            Account.history.append(str(datetime.now()) + " Added " + str(amount) + " Balance " + str(self._balance))
+            self._history.add_to_history(" Added ", amount, self._balance)
 
     def charge(self, amount):
         if amount > self._balance:
             raise BankException("Not enough money")
         else:
             self._balance -= amount
-            Account.history.append(str(datetime.now()) + " Withdrawal " + str(amount) + " Balance " + str(self._balance))
+            self._history.add_to_history(" Withdrawal ", amount, self._balance)
 
     @classmethod
     def calc_interest_value(cls, amount):
@@ -48,20 +61,13 @@ class Account:
     def calc_interest(self):
         interest = self.calc_interest_value(self._balance)
         self._balance = self._balance + interest
-        Account.history.append(str(datetime.now()) + " Interest of " + str(interest) + " Balance " + str(self._balance))
+        self._history.add_to_history(" Interest ", interest, self._balance)
 
     def get_balance(self):
         return self._balance
 
-class History():
-    def __init__(self):
-        self.history = []
-
-    def add_deposit(self, message):
-        self.history.append(message)
-
-    def add_(self, message):
-        self.history.append(message)
+    def get_history(self):
+        return self._history
 
 
 c = Customer('Anne', 'Smith', 'anne@smith.com')
@@ -87,7 +93,13 @@ class DebitAccount(Account):
 s_acc = SavingsAccount(c)
 s_acc.deposit(100)
 s_acc.calc_interest()
+s_acc.calc_interest()
 print(s_acc.get_balance())
 
-print(acc.history)
+print(acc.get_history())
+print(s_acc.get_history())
+
+
+
+
 
