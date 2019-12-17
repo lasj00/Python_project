@@ -32,14 +32,14 @@ class Account:
             print("Not a valid amount!")
         else:
             self._balance += amount
-            Account.history.append(str(datetime.now()) + " Added " + str(amount))
+            Account.history.append(str(datetime.now()) + " Added " + str(amount) + " Balance " + str(self._balance))
 
     def charge(self, amount):
         if amount > self._balance:
             raise BankException("Not enough money")
         else:
             self._balance -= amount
-            Account.history.append(str(datetime.now()) + " Withdrawal " + str(amount))
+            Account.history.append(str(datetime.now()) + " Withdrawal " + str(amount) + " Balance " + str(self._balance))
 
     @classmethod
     def calc_interest_value(cls, amount):
@@ -48,11 +48,20 @@ class Account:
     def calc_interest(self):
         interest = self.calc_interest_value(self._balance)
         self._balance = self._balance + interest
-        Account.history.append(str(datetime.now()) + " Interest of " + str(interest))
+        Account.history.append(str(datetime.now()) + " Interest of " + str(interest) + " Balance " + str(self._balance))
 
     def get_balance(self):
         return self._balance
 
+class History():
+    def __init__(self):
+        self.history = []
+
+    def add_deposit(self, message):
+        self.history.append(message)
+
+    def add_(self, message):
+        self.history.append(message)
 
 
 c = Customer('Anne', 'Smith', 'anne@smith.com')
