@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class Customer:
     last_id = 0
     def __init__(self,first_name, last_name, email):
@@ -17,6 +19,7 @@ class BankException(Exception):
 class Account:
     last_id = 0
     interest_rate = 0.02
+    history = []
 
     def __init__(self, customer):
         Account.last_id += 1
@@ -29,22 +32,28 @@ class Account:
             print("Not a valid amount!")
         else:
             self._balance += amount
+            Account.history.append(str(datetime.now()) + " Added " + str(amount))
 
     def charge(self, amount):
         if amount > self._balance:
             raise BankException("Not enough money")
         else:
             self._balance -= amount
+            Account.history.append(str(datetime.now()) + " Withdrawal " + str(amount))
 
     @classmethod
     def calc_interest_value(cls, amount):
         return cls.interest_rate*amount
 
     def calc_interest(self):
-        self._balance = self._balance + self.calc_interest_value(self._balance)
+        interest = self.calc_interest_value(self._balance)
+        self._balance = self._balance + interest
+        Account.history.append(str(datetime.now()) + " Interest of " + str(interest))
 
     def get_balance(self):
         return self._balance
+
+
 
 c = Customer('Anne', 'Smith', 'anne@smith.com')
 print(c)
@@ -70,4 +79,6 @@ s_acc = SavingsAccount(c)
 s_acc.deposit(100)
 s_acc.calc_interest()
 print(s_acc.get_balance())
+
+print(acc.history)
 
