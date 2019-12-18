@@ -1,8 +1,10 @@
 from datetime import datetime
 
+
 class Customer:
     last_id = 0
-    def __init__(self,first_name, last_name, email):
+
+    def __init__(self, first_name, last_name, email):
         Customer.last_id += 1
         self.customer_id = Customer.last_id
         self.first_name = first_name
@@ -12,22 +14,34 @@ class Customer:
     def __str__(self):
         return "Customer: {0} {1} {2}".format(self.customer_id, self.first_name, self.last_name)
 
+
 # defining our own exception
 class BankException(Exception):
     pass
+
+
+class NotEnoughMoneyException(BankException):
+    pass
+
+
+class NegativeAmountException(BankException):
+    pass
+
 
 class History:
     def __init__(self):
         self.history = []
 
     def add_to_history(self, operation, amount, balance):
-        self.history.append(str(datetime.now()) + str(operation) + str(amount) + " Balance after transaction: " + str(balance))
+        self.history.append(
+            str(datetime.now()) + str(operation) + str(amount) + " Balance after transaction: " + str(balance))
 
     def __str__(self):
         full_history = ""
         for transaction in self.history:
             full_history += str(transaction) + "\n"
         return full_history
+
 
 class Account:
     last_id = 0
@@ -48,15 +62,17 @@ class Account:
             self._history.add_to_history(" Added ", amount, self._balance)
 
     def charge(self, amount):
-        if amount > self._balance:
-            raise BankException("Not enough money")
+        if amount < 0:
+            raise NegativeAmountException("Amount " + str(amount))
+        elif amount > self._balance:
+            raise NotEnoughMoneyException("Not enough money")
         else:
             self._balance -= amount
             self._history.add_to_history(" Withdrawal ", amount, self._balance)
 
     @classmethod
     def calc_interest_value(cls, amount):
-        return cls.interest_rate*amount
+        return cls.interest_rate * amount
 
     def calc_interest(self):
         interest = self.calc_interest_value(self._balance)
@@ -79,16 +95,22 @@ print(acc.get_balance())
 
 try:
     acc.charge(1100)
+except NegativeAmountException as na:
+    print(ne)
+    print("continuing...")
 except BankException as e:
     print(e)
-
+    # exit(0)
 print(acc.get_balance())
+
 
 class SavingsAccount(Account):
     interest_rate = 0.03
 
+
 class DebitAccount(Account):
     interest_rate = 0.001
+
 
 s_acc = SavingsAccount(c)
 s_acc.deposit(100)
@@ -98,8 +120,3 @@ print(s_acc.get_balance())
 
 print(acc.get_history())
 print(s_acc.get_history())
-
-
-
-
-
